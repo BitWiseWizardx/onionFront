@@ -10,7 +10,7 @@
 	}
 
 	body {
-		@apply bg-slate-900 text-white text-sm md:text-base;
+		@apply bg-slate-900 text-slate-200 text-sm md:text-base;
 	}
 }
 
@@ -21,7 +21,11 @@
 }
 
 @layer utilities {
-	.btn {
-		@apply px-4 py-2 bg-red-600 rounded-md;
+	.smbtn {
+		@apply px-4 py-2 border border-white rounded-lg text-xs text-accentColor/80 border-accentColor/30 hover:text-accentColor/90 hover:border-accentColor/40 focus:text-accentColor focus:border-accentColor/50;
+	}
+
+	.lgButton {
+		@apply w-full text-center py-1 border-b-4 border-transparent focus:border-b-4 focus:border-accentColor/90 duration-300 ease-in-out;
 	}
 }

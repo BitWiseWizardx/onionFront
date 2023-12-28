@@ -14,7 +14,7 @@ export default function Navigation() {
 			</div>
 			<div className="flex items-center gap-3 md:gap-6">
 				<TfiStatsUp className="text-2xl hover:-mt-2 hover:text-accentColor duration-300" />
-				<div className="w-[40px] h-[40px] rounded-full border">
+				<div className="w-[38px] h-[38px] rounded-full">
 					<img
 						className="w-full h-full object-cover rounded-full"
 						src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREO17hg6KvLlweeZWN0LCEdi-OXM9qGpbQ9w&usqp=CAU"
