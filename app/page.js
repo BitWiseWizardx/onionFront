@@ -1,17 +1,18 @@
 import React from "react";
 import { currencyFormatter } from "@/lib/utils";
 import ExpenseItems from "@/components/expenseItems";
+import Stats from "@/components/stats";
 
 export default function Home() {
 	const DammyData = [
-		{ color: "#3559E0", title: "Clothing", amount: "6000" },
-		{ color: "#000", title: "Skin Care", amount: "40000" },
-		{ color: "#fff", title: "Eating", amount: "75000" },
-		{ color: "#A367B1", title: "Clothing", amount: "6000" },
-		{ color: "#65B741", title: "Clothing", amount: "6000" },
+		{ color: "#EE7214", title: "Clothing", amount: "6000" },
+		{ color: "#527853", title: "Skin Care", amount: "40000" },
+		{ color: "#F9E8D9", title: "Eating", amount: "75000" },
+		{ color: "#F7B787", title: "Clothing", amount: "6000" },
+		{ color: "#FFC5C5", title: "Clothing", amount: "6000" },
 	];
 	return (
-		<main className="container max-w-screen-md mx-auto">
+		<main className="container max-w-screen-md mx-auto space-y-4">
 			{/* Balance Section */}
 			<section className="flex flex-col md:flex-row items-center justify-between gap-4">
 				<div>
@@ -46,6 +47,15 @@ export default function Home() {
 						);
 					})}
 				</div>
+			</section>
+
+			{/* Stats Section */}
+			<section className="container">
+				<Stats
+					color={DammyData.map((e) => e.color)}
+					title={DammyData.map((e) => e.title)}
+					amount={DammyData.map((e) => e.amount)}
+				/>
 			</section>
 		</main>
 	);
