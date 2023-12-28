@@ -3,7 +3,7 @@ import { TfiStatsUp } from "react-icons/tfi";
 
 export default function Navigation() {
 	return (
-		<header className="container flex items-center justify-between">
+		<header className="container max-w-screen-md mx-auto flex items-center justify-between">
 			<div>
 				<h1 className="text-3xl font-bold bg-accentColor text-white text-center hover:tracking-widest duration-300">
 					onion
