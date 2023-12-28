@@ -2,8 +2,26 @@
 @tailwind components;
 @tailwind utilities;
 
-* {
-	padding: 0;
-	margin: 0;
-	box-sizing: border-box;
+@layer base {
+	* {
+		padding: 0;
+		margin: 0;
+		box-sizing: border-box;
+	}
+
+	body {
+		@apply bg-slate-900 text-white text-sm md:text-base;
+	}
+}
+
+@layer components {
+	.container {
+		@apply px-2 py-5 md:px-14 md:py-10;
+	}
+}
+
+@layer utilities {
+	.btn {
+		@apply px-4 py-2 bg-red-600 rounded-md;
+	}
 }
