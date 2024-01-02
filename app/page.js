@@ -19,6 +19,7 @@ export default function Home() {
 			{/* Model Box */}
 			<ModelBox show={modelOpen} onClose={setModelOpen}>
 				<h1 className="text-4xl font-bold">Hello</h1>
+				<h1>Hello</h1>
 			</ModelBox>
 
 			<main className="container max-w-screen-md mx-auto space-y-4 ">
