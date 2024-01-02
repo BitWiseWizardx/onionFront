@@ -13,13 +13,37 @@ const DammyData = [
 ];
 
 export default function Home() {
-	const [modelOpen, setModelOpen] = useState(true);
+	const [incomeModelOpen, setIncomeModelOpen] = useState(true);
 	return (
 		<>
-			{/* Model Box */}
-			<ModelBox show={modelOpen} onClose={setModelOpen}>
-				<h1 className="text-4xl font-bold">Hello</h1>
-				<h1>Hello</h1>
+			{/* Income Model Box */}
+			<ModelBox show={incomeModelOpen} onClose={setIncomeModelOpen}>
+				<form className="space-y-4">
+					<div className="flex flex-col gap-2">
+						<label htmlFor="amount" className="text-sm">
+							Enter Income Description
+						</label>
+						<input className="inputBox" type="text" required />
+					</div>
+					<div className="flex flex-col gap-2">
+						<label htmlFor="amount" className="text-sm">
+							Enter Income Amount
+						</label>
+						<input
+							className="inputBox"
+							type="number"
+							min={0.1}
+							step={0.1}
+							required
+						/>
+					</div>
+					<div className="flex items-center justify-end gap-2">
+						<button className="expenseBtn bg-accentColor/20">
+							Cancel
+						</button>
+						<button className="incomeBtn bg-greenColor/20">Add</button>
+					</div>
+				</form>
 			</ModelBox>
 
 			<main className="container max-w-screen-md mx-auto space-y-4 ">
@@ -34,10 +58,11 @@ export default function Home() {
 						</h2>
 					</div>
 					<div className="flex items-center gap-2">
-						<button onClick={() => setModelOpen(true)} className="smbtn">
-							+ Expenses
-						</button>
-						<button onClick={() => setModelOpen(true)} className="smbtn">
+						<button className="expenseBtn">+ Expenses</button>
+						<button
+							onClick={() => setIncomeModelOpen(true)}
+							className="incomeBtn"
+						>
 							+ Incomes
 						</button>
 					</div>

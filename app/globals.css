@@ -21,11 +21,19 @@
 }
 
 @layer utilities {
-	.smbtn {
-		@apply px-4 py-2 border border-white rounded-lg text-xs text-accentColor/80 border-accentColor/30 hover:text-accentColor/90 hover:border-accentColor/40 focus:text-accentColor focus:border-accentColor/50;
+	.expenseBtn {
+		@apply px-4 py-2 border border-white rounded-lg text-xs text-accentColor/80 border-accentColor/50 hover:text-accentColor/90 hover:border-accentColor/40 focus:text-accentColor focus:border-accentColor/50;
+	}
+
+	.incomeBtn {
+		@apply px-4 py-2 border border-white rounded-lg text-xs text-greenColor/80 border-greenColor/50 hover:text-greenColor/90 hover:border-greenColor/40 focus:text-greenColor focus:border-greenColor/50;
 	}
 
 	.lgButton {
 		@apply w-full text-center py-1 border-b-4 border-transparent focus:border-b-4 focus:border-accentColor/90 duration-300 ease-in-out;
+	}
+
+	.inputBox {
+		@apply px-4 py-2 rounded-full text-gray-300 bg-bgColor border-none outline-none;
 	}
 }
