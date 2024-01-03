@@ -39,6 +39,7 @@ export default function Home() {
 						<input
 							className="inputBox"
 							name="description"
+							ref={descriptionRef}
 							type="text"
 							required
 						/>
@@ -51,6 +52,7 @@ export default function Home() {
 							className="inputBox"
 							name="amount"
 							type="number"
+							ref={amountRef}
 							min={0.1}
 							step={0.1}
 							required
