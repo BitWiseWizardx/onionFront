@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { currencyFormatter } from "@/lib/utils";
 import ExpenseItems from "@/components/expenseItems";
 import Stats from "@/components/stats";
@@ -14,16 +14,34 @@ const DammyData = [
 
 export default function Home() {
 	const [incomeModelOpen, setIncomeModelOpen] = useState(true);
+	const descriptionRef = useRef();
+	const amountRef = useRef();
+	const incomeHandler = (e) => {
+		e.preventDefault();
+
+		const newIncomes = {
+			description: descriptionRef.current.value,
+			amount: amountRef.current.value,
+			createdAt: new Date(),
+		};
+
+		console.log(newIncomes);
+	};
 	return (
 		<>
 			{/* Income Model Box */}
 			<ModelBox show={incomeModelOpen} onClose={setIncomeModelOpen}>
-				<form className="space-y-4">
+				<form onSubmit={incomeHandler} className="space-y-4">
 					<div className="flex flex-col gap-2">
 						<label htmlFor="amount" className="text-sm">
 							Enter Income Description
 						</label>
-						<input className="inputBox" type="text" required />
+						<input
+							className="inputBox"
+							name="description"
+							type="text"
+							required
+						/>
 					</div>
 					<div className="flex flex-col gap-2">
 						<label htmlFor="amount" className="text-sm">
@@ -31,6 +49,7 @@ export default function Home() {
 						</label>
 						<input
 							className="inputBox"
+							name="amount"
 							type="number"
 							min={0.1}
 							step={0.1}
@@ -38,10 +57,12 @@ export default function Home() {
 						/>
 					</div>
 					<div className="flex items-center justify-end gap-2">
-						<button className="expenseBtn bg-accentColor/20">
+						<button type="reset" className="expenseBtn bg-accentColor/20">
 							Cancel
 						</button>
-						<button className="incomeBtn bg-greenColor/20">Add</button>
+						<button type="submit" className="incomeBtn bg-greenColor/20">
+							Add
+						</button>
 					</div>
 				</form>
 			</ModelBox>
