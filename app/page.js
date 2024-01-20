@@ -1,10 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import { currencyFormatter } from "@/lib/utils";
-import ExpenseItems from "@/components/expenseItems";
 import Stats from "@/components/stats";
 import ModelBox from "@/components/modelBox";
-import IncomeModelBox from "@/components/incomeModelBox";
+import ExpenseHistory from "@/components/expenseHistory";
 const DammyData = [
   { color: "#EE7214", title: "Clothing", amount: "6000" },
   { color: "#527853", title: "Skin Care", amount: "40000" },
@@ -18,19 +17,17 @@ export default function Home() {
 
   return (
     <>
-      {/* --------Income Model Box------- */}
-      <ModelBox show={modelOpen} onClose={setModelOpen}>
-        <IncomeModelBox />
-      </ModelBox>
+      {/* -------- Model Box------- */}
+      <ModelBox show={modelOpen} onClose={setModelOpen} />
 
-      <main className="container max-w-screen-md mx-auto space-y-4 ">
-        {/* Balance Section */}
-        <section className="flex flex-col md:flex-row items-center justify-between gap-4">
+      <main className="container max-w-screen-md mx-auto">
+        {/* ---------Balance Section-------- */}
+        <section className="flex flex-col md:flex-row items-center justify-between gap-4 mb-14">
           <div>
             <p className="text-xs text-grayColor text-center md:text-left">
               Your Balance
             </p>
-            <h2 className="text-xl font-bold ">{currencyFormatter(300000)}</h2>
+            <h2 className="text-2xl font-bold ">{currencyFormatter(300000)}</h2>
           </div>
           <div className="flex items-center gap-2">
             <button className="expenseBtn">+ Expenses</button>
@@ -43,16 +40,14 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Expenses Section */}
-        <section className="container space-y-6">
-          <div className="flex items-center justify-between">
-            <button className="lgButton">Expenses</button>
-            <button className="lgButton">Incomes</button>
-          </div>
-          <div className="space-y-2">
+        {/* -------Expenses Section-------- */}
+        <section className="space-y-1">
+          <h1 className="font-bold">Your Expences</h1>
+          <div className="w-full h-[0.5px] bg-white"></div>
+          <div className="p-5 md:px-10 space-y-2 h-[350px] overflow-y-auto">
             {DammyData.map((data, index) => {
               return (
-                <ExpenseItems
+                <ExpenseHistory
                   key={index}
                   color={data.color}
                   title={data.title}
@@ -63,7 +58,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Stats Section */}
+        {/* --------Stats Section---------- */}
         <section className="container">
           <Stats
             color={DammyData.map((e) => e.color)}
