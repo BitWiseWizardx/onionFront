@@ -2,8 +2,10 @@
 import React, { useState } from "react";
 import { currencyFormatter } from "@/lib/utils";
 import Stats from "@/components/stats";
-import ModelBox from "@/components/modelBox";
+import IncomeModelBox from "@/components/incomeModelBox";
 import ExpenseHistory from "@/components/expenseHistory";
+import ExpenseModelBox from "@/components/expenseModelBox";
+import ModelBox from "@/components/modelBox";
 const DammyData = [
   { color: "#EE7214", title: "Clothing", amount: "6000" },
   { color: "#527853", title: "Skin Care", amount: "40000" },
@@ -13,12 +15,21 @@ const DammyData = [
 ];
 
 export default function Home() {
-  const [modelOpen, setModelOpen] = useState(false);
+  const [incomeModelOpen, setIncomeModelOpen] = useState(false);
+  const [expenseModelOpen, setExpenseModelOpen] = useState(false);
 
   return (
     <>
       {/* -------- Model Box------- */}
-      <ModelBox show={modelOpen} onClose={setModelOpen} />
+      {incomeModelOpen ? (
+        <ModelBox show={incomeModelOpen} onClose={setIncomeModelOpen}>
+          <IncomeModelBox />
+        </ModelBox>
+      ) : (
+        <ModelBox show={expenseModelOpen} onClose={setExpenseModelOpen}>
+          <ExpenseModelBox />
+        </ModelBox>
+      )}
 
       <main className="container max-w-screen-md mx-auto">
         {/* ---------Balance Section-------- */}
@@ -30,9 +41,14 @@ export default function Home() {
             <h2 className="text-2xl font-bold ">{currencyFormatter(300000)}</h2>
           </div>
           <div className="flex items-center gap-2">
-            <button className="expenseBtn">+ Expenses</button>
             <button
-              onClick={() => setModelOpen(!modelOpen)}
+              onClick={() => setExpenseModelOpen(!expenseModelOpen)}
+              className="expenseBtn"
+            >
+              + Expenses
+            </button>
+            <button
+              onClick={() => setIncomeModelOpen(!incomeModelOpen)}
               className="incomeBtn"
             >
               + Incomes
