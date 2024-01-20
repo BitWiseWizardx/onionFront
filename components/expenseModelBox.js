@@ -11,7 +11,7 @@ export default function ExpenseModelBox() {
   const quantityRef = useRef();
   const amountRef = useRef();
 
-  const incomeHandler = (e) => {
+  const expenseHandler = (e) => {
     e.preventDefault();
 
     const newValue = {
@@ -20,24 +20,25 @@ export default function ExpenseModelBox() {
       amount: amountRef.current.value,
       createdAt: new Date(),
     };
-    console.log(newIncomes);
+    console.log(newValue);
 
     descriptionRef.current.value = "";
+    quantityRef.current.value = "";
     amountRef.current.value = "";
 
-    setExpense((prevIncome) => [
+    setExpense((prevExpense) => [
       {
-        id: prevIncome.length + 1,
+        id: prevExpense.length + 1,
         description: newValue.description,
         quantity: newValue.quantity,
         amount: newValue.amount,
       },
-      ...prevIncome,
+      ...prevExpense,
     ]);
   };
   return (
     <div>
-      <form onSubmit={incomeHandler} className="space-y-2">
+      <form onSubmit={expenseHandler} className="space-y-2">
         <div className="flex flex-col">
           <label htmlFor="amount" className="text-sm pl-2">
             Enter Expense Description

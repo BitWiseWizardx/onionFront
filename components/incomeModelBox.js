@@ -18,7 +18,7 @@ export default function IncomeModelBox() {
       amount: amountRef.current.value,
       createdAt: new Date(),
     };
-    console.log(newIncomes);
+    console.log(newValue);
 
     descriptionRef.current.value = "";
     amountRef.current.value = "";
