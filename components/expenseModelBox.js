@@ -1,12 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useRef } from "react";
 import { currencyFormatter } from "../lib/utils";
-
-export default function ExpenseModelBox() {
-  const [expense, setExpense] = useState([
-    { id: 1, description: "Clothing", quantity: 2, totalAmount: "200000" },
-    { id: 2, description: "Food", quantity: 5, totalAmount: "80000" },
-  ]);
-
+export default function ExpenseModelBox({ expense, setExpense }) {
   const descriptionRef = useRef();
   const quantityRef = useRef();
   const amountRef = useRef();

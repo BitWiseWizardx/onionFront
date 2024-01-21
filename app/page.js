@@ -17,16 +17,25 @@ const DammyData = [
 export default function Home() {
   const [incomeModelOpen, setIncomeModelOpen] = useState(false);
   const [expenseModelOpen, setExpenseModelOpen] = useState(false);
+  const [income, setIncome] = useState([
+    { id: 1, description: "Salary", amount: "200000" },
+    { id: 2, description: "Bonus", amount: "600000" },
+  ]);
+  const [expense, setExpense] = useState([
+    { id: 1, description: "Clothing", quantity: 2, totalAmount: "200000" },
+    { id: 2, description: "Food", quantity: 5, totalAmount: "80000" },
+  ]);
+
   return (
     <>
       {/* -------- Model Box------- */}
       {incomeModelOpen ? (
         <ModelBox show={incomeModelOpen} onClose={setIncomeModelOpen}>
-          <IncomeModelBox />
+          <IncomeModelBox income={income} setIncome={setIncome} />
         </ModelBox>
       ) : (
         <ModelBox show={expenseModelOpen} onClose={setExpenseModelOpen}>
-          <ExpenseModelBox />
+          <ExpenseModelBox expense={expense} setExpense={setExpense} />
         </ModelBox>
       )}
       <main className="container max-w-screen-md mx-auto">
@@ -58,18 +67,7 @@ export default function Home() {
         <section className="space-y-1">
           <h1 className="font-bold">Your Expences</h1>
           <div className="w-full h-[0.5px] bg-white"></div>
-          <div className="p-5 md:px-10 space-y-2 h-[350px] overflow-y-auto">
-            {DammyData.map((data, index) => {
-              return (
-                <ExpenseHistory
-                  key={index}
-                  color={data.color}
-                  title={data.title}
-                  amount={data.amount}
-                />
-              );
-            })}
-          </div>
+          <ExpenseHistory expense={expense} />
         </section>
 
         {/* --------Stats Section---------- */}
