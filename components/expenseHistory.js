@@ -1,4 +1,4 @@
-import { currencyFormatter } from "@/lib/utils";
+import { currencyFormatter } from "../lib/utils";
 
 export default function ExpenseHistory({ color, title, amount }) {
   return (

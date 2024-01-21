@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { currencyFormatter } from "@/lib/utils";
+import { currencyFormatter } from "../lib/utils";
 
 export default function IncomeModelBox() {
   const [income, setIncome] = useState([

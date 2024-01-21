@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
-import { currencyFormatter } from "@/lib/utils";
-import Stats from "@/components/stats";
-import IncomeModelBox from "@/components/incomeModelBox";
-import ExpenseHistory from "@/components/expenseHistory";
-import ExpenseModelBox from "@/components/expenseModelBox";
-import ModelBox from "@/components/modelBox";
+import { currencyFormatter } from "../lib/utils";
+import Stats from "../components/stats";
+import IncomeModelBox from "../components/incomeModelBox";
+import ExpenseHistory from "../components/expenseHistory";
+import ExpenseModelBox from "../components/expenseModelBox";
+import ModelBox from "../components/modelBox";
 const DammyData = [
   { color: "#EE7214", title: "Clothing", amount: "6000" },
   { color: "#527853", title: "Skin Care", amount: "40000" },
@@ -17,7 +17,6 @@ const DammyData = [
 export default function Home() {
   const [incomeModelOpen, setIncomeModelOpen] = useState(false);
   const [expenseModelOpen, setExpenseModelOpen] = useState(false);
-
   return (
     <>
       {/* -------- Model Box------- */}
@@ -30,7 +29,6 @@ export default function Home() {
           <ExpenseModelBox />
         </ModelBox>
       )}
-
       <main className="container max-w-screen-md mx-auto">
         {/* ---------Balance Section-------- */}
         <section className="flex flex-col md:flex-row items-center justify-between gap-4 mb-14">
