@@ -1,18 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import { currencyFormatter } from "../lib/utils";
-import Stats from "../components/stats";
 import IncomeModelBox from "../components/incomeModelBox";
 import ExpenseHistory from "../components/expenseHistory";
 import ExpenseModelBox from "../components/expenseModelBox";
 import ModelBox from "../components/modelBox";
-const DammyData = [
-  { color: "#EE7214", title: "Clothing", amount: "6000" },
-  { color: "#527853", title: "Skin Care", amount: "40000" },
-  { color: "#F9E8D9", title: "Eating", amount: "75000" },
-  { color: "#F7B787", title: "Clothing", amount: "6000" },
-  { color: "#FFC5C5", title: "Clothing", amount: "6000" },
-];
 
 export default function Home() {
   const [incomeModelOpen, setIncomeModelOpen] = useState(false);
@@ -70,14 +62,7 @@ export default function Home() {
           <ExpenseHistory expense={expense} />
         </section>
 
-        {/* --------Stats Section---------- */}
-        <section className="container">
-          <Stats
-            color={DammyData.map((e) => e.color)}
-            title={DammyData.map((e) => e.title)}
-            amount={DammyData.map((e) => e.amount)}
-          />
-        </section>
+
       </main>
     </>
   );
