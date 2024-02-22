@@ -6,7 +6,7 @@ export default function ModelBox({ show, onClose, children }) {
       style={{
         transform: show ? "translateY(0%)" : "translateY(-200%)",
       }}
-      className="absolute container top-14 left-0 transition-all duration-200"
+      className="absolute top-14 container transition-all duration-200"
     >
       <div className="container max-w-2xl mx-auto bg-grayColor/20 backdrop-blur-md rounded-lg">
         <div className="flex justify-end">

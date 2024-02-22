@@ -19,7 +19,7 @@ export default function Home() {
   ]);
 
   return (
-    <>
+    <div className="flex flex-col items-center">
       {/* -------- Model Box------- */}
       {incomeModelOpen ? (
         <ModelBox show={incomeModelOpen} onClose={setIncomeModelOpen}>
@@ -64,6 +64,6 @@ export default function Home() {
 
 
       </main>
-    </>
+    </div>
   );
 }
