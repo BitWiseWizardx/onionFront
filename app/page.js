@@ -14,34 +14,50 @@ export default function Home() {
 		{ id: 1, description: "Salary", amount: "200000" },
 		{ id: 2, description: "Bonus", amount: "600000" },
 	]);
-	const [expense, setExpense] = useState([
-		{ id: 1, description: "Clothing", quantity: 2, totalAmount: "200000" },
-		{ id: 2, description: "Food", quantity: 5, totalAmount: "80000" },
-	]);
+	const [expense, setExpense] = useState([]);
 
 	useEffect(() => {
-		const fetchedData = async () => {
-			try {
-				const res = await axios.get("http://localhost:4001/income");
-				setIncome(res.data);
-				console.log(res.data);
-			} catch (error) {
-				console.error(error);
-			}
-		};
-		fetchedData();
+		getIncomeData();
+		getExpenseData();
 	}, []);
+	const getIncomeData = async () => {
+		try {
+			const getIncome = await axios.get("http://localhost:4001/income");
+			setIncome(getIncome.data);
+			console.log(getIncome.data);
+		} catch (error) {
+			console.error(error);
+		}
+	};
+
+	const getExpenseData = async () => {
+		try {
+			const getExpense = await axios.get("http://localhost:4001/expense");
+			setExpense(getExpense.data);
+			console.log(getExpense.data);
+		} catch (error) {
+			console.error(error);
+		}
+	};
 
 	return (
 		<div className="w-full overflow-hidden flex flex-col items-center ">
 			{/* -------- Model Box------- */}
 			{incomeModelOpen ? (
 				<ModelBox show={incomeModelOpen} onClose={setIncomeModelOpen}>
-					<IncomeModelBox income={income} setIncome={setIncome} />
+					<IncomeModelBox
+						income={income}
+						setIncome={setIncome}
+						getIncomeData={getIncomeData}
+					/>
 				</ModelBox>
 			) : (
 				<ModelBox show={expenseModelOpen} onClose={setExpenseModelOpen}>
-					<ExpenseModelBox expense={expense} setExpense={setExpense} />
+					<ExpenseModelBox
+						expense={expense}
+						setExpense={setExpense}
+						getExpenseData={getExpenseData}
+					/>
 				</ModelBox>
 			)}
 			<main className="container max-w-screen-md mx-auto">

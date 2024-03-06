@@ -2,40 +2,58 @@ import React, { useRef } from "react";
 import { currencyFormatter } from "../lib/utils";
 import { MdOutlinePayment } from "react-icons/md";
 import { FaRegTrashAlt } from "react-icons/fa";
+import axios from "axios";
 
-export default function ExpenseModelBox({ expense, setExpense }) {
+export default function ExpenseModelBox({
+	expense,
+	setExpense,
+	getExpenseData,
+}) {
 	const descriptionRef = useRef();
 	const quantityRef = useRef();
 	const amountRef = useRef();
 
-	const expenseHandler = (e) => {
+	const createExpenseData = async (e) => {
 		e.preventDefault();
 
-		const newValue = {
+		const createdExpense = await axios.post("http://localhost:4001/expense", {
 			description: descriptionRef.current.value,
-			quantity: quantityRef.current.value,
+			quantity: parseInt(quantityRef.current.value),
 			amount: amountRef.current.value,
-			createdAt: new Date(),
-		};
-		console.log(newValue);
-
-		descriptionRef.current.value = "";
-		quantityRef.current.value = "";
-		amountRef.current.value = "";
-
-		setExpense((prevExpense) => [
-			{
-				id: prevExpense.length + 1,
-				description: newValue.description,
-				quantity: newValue.quantity,
-				amount: newValue.amount,
-			},
-			...prevExpense,
-		]);
+			created_at: new Date(),
+		});
+		getExpenseData();
+		console.log(createdExpense);
 	};
+
+	// const expenseHandler = (e) => {
+	// 	e.preventDefault();
+
+	// 	const newValue = {
+	// 		description: descriptionRef.current.value,
+	// 		quantity: quantityRef.current.value,
+	// 		amount: amountRef.current.value,
+	// 		createdAt: new Date(),
+	// 	};
+	// 	console.log(newValue);
+
+	// 	descriptionRef.current.value = "";
+	// 	quantityRef.current.value = "";
+	// 	amountRef.current.value = "";
+
+	// 	setExpense((prevExpense) => [
+	// 		{
+	// 			id: prevExpense.length + 1,
+	// 			description: newValue.description,
+	// 			quantity: newValue.quantity,
+	// 			amount: newValue.amount,
+	// 		},
+	// 		...prevExpense,
+	// 	]);
+	// };
 	return (
 		<div>
-			<form onSubmit={expenseHandler} className="space-y-2">
+			<form onSubmit={createExpenseData} className="space-y-2">
 				<div className="flex flex-col">
 					<label htmlFor="amount" className="text-sm pl-2">
 						Enter Expense Description
@@ -93,7 +111,7 @@ export default function ExpenseModelBox({ expense, setExpense }) {
 							<p className="col-span-1">{expense.quantity}</p>
 							<h1 className="col-span-4">{expense.description}</h1>
 							<p className="text-sm col-span-5">
-								{currencyFormatter(expense.totalAmount)}
+								{currencyFormatter(expense.amount)}
 							</p>
 							<div className="flex items-center justify-end gap-5 col-span-2">
 								<MdOutlinePayment className="text-greenColor/80  text-lg" />

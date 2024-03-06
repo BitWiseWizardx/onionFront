@@ -1,35 +1,47 @@
 import React, { useRef, useState } from "react";
 import { currencyFormatter } from "../lib/utils";
+import axios from "axios";
 
-export default function IncomeModelBox({ income, setIncome }) {
+export default function IncomeModelBox({ income, setIncome, getIncomeData }) {
 	const descriptionRef = useRef();
 	const amountRef = useRef();
 
-	const incomeHandler = (e) => {
+	const createIncomeData = async (e) => {
 		e.preventDefault();
-
-		const newValue = {
+		const createdIncome = await axios.post("http://localhost:4001/income", {
 			description: descriptionRef.current.value,
 			amount: amountRef.current.value,
-			createdAt: new Date(),
-		};
-		console.log(newValue);
-
-		descriptionRef.current.value = "";
-		amountRef.current.value = "";
-
-		setIncome((prevIncome) => [
-			{
-				id: prevIncome.length + 1,
-				description: newValue.description,
-				amount: newValue.amount,
-			},
-			...prevIncome,
-		]);
+			created_at: new Date(),
+		});
+		getIncomeData();
+		console.log(createdIncome.data);
 	};
+
+	// const incomeHandler = (e) => {
+	// 	e.preventDefault();
+
+	// 	const newValue = {
+	// 		description: descriptionRef.current.value,
+	// 		amount: amountRef.current.value,
+	// 		createdAt: new Date(),
+	// 	};
+	// 	console.log(newValue);
+
+	// 	descriptionRef.current.value = "";
+	// 	amountRef.current.value = "";
+
+	// 	setIncome((prevIncome) => [
+	// 		{
+	// 			id: prevIncome.length + 1,
+	// 			description: newValue.description,
+	// 			amount: newValue.amount,
+	// 		},
+	// 		...prevIncome,
+	// 	]);
+	// };
 	return (
 		<div>
-			<form onSubmit={incomeHandler} className="space-y-2">
+			<form onSubmit={createIncomeData} className="space-y-2">
 				<div className="flex flex-col">
 					<label htmlFor="amount" className="text-sm pl-2">
 						Enter Income Description
