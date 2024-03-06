@@ -1,10 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { currencyFormatter } from "../lib/utils";
 import IncomeModelBox from "../components/incomeModelBox";
 import ExpenseHistory from "../components/expenseHistory";
 import ExpenseModelBox from "../components/expenseModelBox";
 import ModelBox from "../components/modelBox";
+import axios from "axios";
 
 export default function Home() {
 	const [incomeModelOpen, setIncomeModelOpen] = useState(false);
@@ -17,6 +18,19 @@ export default function Home() {
 		{ id: 1, description: "Clothing", quantity: 2, totalAmount: "200000" },
 		{ id: 2, description: "Food", quantity: 5, totalAmount: "80000" },
 	]);
+
+	useEffect(() => {
+		const fetchedData = async () => {
+			try {
+				const res = await axios.get("http://localhost:4001/income");
+				setIncome(res.data);
+				console.log(res.data);
+			} catch (error) {
+				console.error(error);
+			}
+		};
+		fetchedData();
+	}, []);
 
 	return (
 		<div className="w-full overflow-hidden flex flex-col items-center ">
