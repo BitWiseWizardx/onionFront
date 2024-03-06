@@ -15,7 +15,6 @@ export default function ExpenseModelBox({
 
 	const createExpenseData = async (e) => {
 		e.preventDefault();
-
 		const createdExpense = await axios.post("http://localhost:4001/expense", {
 			description: descriptionRef.current.value,
 			quantity: parseInt(quantityRef.current.value),
@@ -24,6 +23,14 @@ export default function ExpenseModelBox({
 		});
 		getExpenseData();
 		console.log(createdExpense);
+	};
+
+	const deleteExpenseData = async (id) => {
+		const deletedExpense = await axios.delete(
+			"http://localhost:4001/expense/" + id
+		);
+		getExpenseData();
+		console.log(deletedExpense);
 	};
 
 	// const expenseHandler = (e) => {
@@ -115,7 +122,10 @@ export default function ExpenseModelBox({
 							</p>
 							<div className="flex items-center justify-end gap-5 col-span-2">
 								<MdOutlinePayment className="text-greenColor/80  text-lg" />
-								<FaRegTrashAlt className="text-accentColor/80" />
+								<FaRegTrashAlt
+									onClick={() => deleteExpenseData(expense.id)}
+									className="text-accentColor/80"
+								/>
 							</div>
 						</div>
 					))}

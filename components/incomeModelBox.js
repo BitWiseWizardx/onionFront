@@ -1,5 +1,6 @@
 import React, { useRef, useState } from "react";
 import { currencyFormatter } from "../lib/utils";
+import { FaRegTrashAlt } from "react-icons/fa";
 import axios from "axios";
 
 export default function IncomeModelBox({ income, setIncome, getIncomeData }) {
@@ -15,6 +16,14 @@ export default function IncomeModelBox({ income, setIncome, getIncomeData }) {
 		});
 		getIncomeData();
 		console.log(createdIncome.data);
+	};
+
+	const deleteIncomeData = async (id) => {
+		const deletedIncome = await axios.delete(
+			"http://localhost:4001/income/" + id
+		);
+		getIncomeData();
+		console.log(deletedIncome);
 	};
 
 	// const incomeHandler = (e) => {
@@ -88,6 +97,10 @@ export default function IncomeModelBox({ income, setIncome, getIncomeData }) {
 							<p className="text-sm">
 								{currencyFormatter(income.amount)}
 							</p>
+							<FaRegTrashAlt
+								onClick={() => deleteIncomeData(income.id)}
+								className="text-accentColor/80"
+							/>
 						</div>
 					))}
 				</div>
