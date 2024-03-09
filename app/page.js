@@ -10,10 +10,7 @@ import axios from "axios";
 export default function Home() {
 	const [incomeModelOpen, setIncomeModelOpen] = useState(false);
 	const [expenseModelOpen, setExpenseModelOpen] = useState(false);
-	const [income, setIncome] = useState([
-		{ id: 1, description: "Salary", amount: "200000" },
-		{ id: 2, description: "Bonus", amount: "600000" },
-	]);
+	const [income, setIncome] = useState([]);
 	const [expense, setExpense] = useState([]);
 
 	useEffect(() => {
