@@ -12,10 +12,12 @@ export default function Home() {
 	const [expenseModelOpen, setExpenseModelOpen] = useState(false);
 	const [income, setIncome] = useState([]);
 	const [expense, setExpense] = useState([]);
+	const [totalIncome, setTotalIncome] = useState(0);
 
 	useEffect(() => {
 		getIncomeData();
 		getExpenseData();
+		getTotalIncomeData();
 	}, []);
 	const getIncomeData = async () => {
 		try {
@@ -27,6 +29,13 @@ export default function Home() {
 		}
 	};
 
+	const getTotalIncomeData = async () => {
+		const newTotalBalance = await income.reduce((accVal, curVal) => {
+			return accVal + curVal.amount;
+		}, 0);
+		setTotalIncome(newTotalBalance);
+		console.log(income);
+	};
 	const getExpenseData = async () => {
 		try {
 			const getExpense = await axios.get("http://localhost:4001/expense");
@@ -46,6 +55,7 @@ export default function Home() {
 						income={income}
 						setIncome={setIncome}
 						getIncomeData={getIncomeData}
+						setTotalIncome={setTotalIncome}
 					/>
 				</ModelBox>
 			) : (
@@ -65,7 +75,7 @@ export default function Home() {
 							Your Balance
 						</p>
 						<h2 className="text-2xl font-bold ">
-							{currencyFormatter(300000)}
+							{currencyFormatter(totalIncome)}
 						</h2>
 					</div>
 					<div className="flex items-center gap-2">

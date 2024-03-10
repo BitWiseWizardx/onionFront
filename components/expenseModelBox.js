@@ -8,6 +8,8 @@ export default function ExpenseModelBox({
 	expense,
 	setExpense,
 	getExpenseData,
+	show,
+	onClose,
 }) {
 	const descriptionRef = useRef();
 	const quantityRef = useRef();
@@ -23,6 +25,7 @@ export default function ExpenseModelBox({
 		});
 		getExpenseData();
 		console.log(createdExpense);
+		onClose(!show);
 	};
 
 	const deleteExpenseData = async (id) => {

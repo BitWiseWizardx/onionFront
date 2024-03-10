@@ -1,9 +1,16 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { currencyFormatter } from "../lib/utils";
 import { FaRegTrashAlt } from "react-icons/fa";
 import axios from "axios";
 
-export default function IncomeModelBox({ income, setIncome, getIncomeData }) {
+export default function IncomeModelBox({
+	income,
+	setIncome,
+	getIncomeData,
+	setTotalIncome,
+	show,
+	onClose,
+}) {
 	const descriptionRef = useRef();
 	const amountRef = useRef();
 
@@ -11,8 +18,9 @@ export default function IncomeModelBox({ income, setIncome, getIncomeData }) {
 		e.preventDefault();
 		const createdIncome = await axios.post("http://localhost:4001/income", {
 			description: descriptionRef.current.value,
-			amount: amountRef.current.value,
+			amount: parseInt(amountRef.current.value),
 			created_at: new Date(),
+			user_id: 1,
 		});
 		getIncomeData();
 		console.log(createdIncome.data);
@@ -25,7 +33,13 @@ export default function IncomeModelBox({ income, setIncome, getIncomeData }) {
 		getIncomeData();
 		console.log(deletedIncome);
 	};
-
+	useEffect(() => {
+		const newTotalBalance = income.reduce((accVal, curVal) => {
+			return accVal + curVal.amount;
+		}, 0);
+		setTotalIncome(newTotalBalance);
+		console.log(newTotalBalance);
+	}, [income]);
 	// const incomeHandler = (e) => {
 	// 	e.preventDefault();
 
@@ -39,14 +53,14 @@ export default function IncomeModelBox({ income, setIncome, getIncomeData }) {
 	// 	descriptionRef.current.value = "";
 	// 	amountRef.current.value = "";
 
-	// 	setIncome((prevIncome) => [
-	// 		{
-	// 			id: prevIncome.length + 1,
-	// 			description: newValue.description,
-	// 			amount: newValue.amount,
-	// 		},
-	// 		...prevIncome,
-	// 	]);
+	// setIncome((prevIncome) => [
+	// 	{
+	// 		id: prevIncome.length + 1,
+	// 		description: newValue.description,
+	// 		amount: newValue.amount,
+	// 	},
+	// 	...prevIncome,
+	// ]);
 	// };
 	return (
 		<div>
