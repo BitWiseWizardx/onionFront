@@ -15,76 +15,113 @@ export default function Home() {
 	const [income, setIncome] = useState([]);
 	const [expense, setExpense] = useState([]);
 	const [totalIncome, setTotalIncome] = useState(0);
-
-	if (!localStorage.getItem("token")) {
-		router.push("/register");
-	}
+	const [user, setUser] = useState(null);
 
 	useEffect(() => {
 		const token = localStorage.getItem("token");
-		getIncomeData(token);
-		getExpenseData();
+		if (!token) {
+			router.push("/register");
+		} else {
+			fetchUserData(token);
+			getIncomeData(token);
+			getExpenseData(token);
+		}
 	}, []);
-	const getIncomeData = async (token) => {
+
+	const fetchUserData = async (token) => {
 		try {
-			const getIncome = await axios.get("http://localhost:4001/income");
-
-			setIncome(getIncome.data);
-			console.log(getIncome.data);
-
-			const totalIncomeData = getIncome.data;
-			const newTotalBalance = totalIncomeData.reduce((accVal, curVal) => {
-				return accVal + curVal.amount;
-			}, 0);
-			setTotalIncome(newTotalBalance);
+			const response = await axios.get(
+				"http://localhost:4001/user/protected",
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			setUser(response.data.user);
+			if (!response.data.user) {
+				localStorage.removeItem("token");
+				router.push("/register");
+			}
 		} catch (error) {
-			console.error(error);
+			handleRequestError(error);
 		}
 	};
-	const getExpenseData = async () => {
+
+	const getIncomeData = async (token) => {
 		try {
-			const getExpense = await axios.get("http://localhost:4001/expense");
-			setExpense(getExpense.data);
-			console.log(getExpense.data);
+			const response = await axios.get("http://localhost:4001/income", {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			setIncome(response.data);
+			updateTotalIncome(response.data);
 		} catch (error) {
+			handleRequestError(error);
+		}
+	};
+
+	const getExpenseData = async (token) => {
+		try {
+			const response = await axios.get("http://localhost:4001/expense", {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			setExpense(response.data);
+		} catch (error) {
+			handleRequestError(error);
+		}
+	};
+
+	const updateTotalIncome = (incomeData) => {
+		const total = incomeData.reduce((acc, cur) => acc + cur.amount, 0);
+		setTotalIncome(total);
+	};
+
+	const handleRequestError = (error) => {
+		if (error.response && error.response.status === 401) {
+			localStorage.removeItem("token");
+			router.push("/register");
+		} else {
+			alert("An error occurred while processing your request.");
 			console.error(error);
 		}
 	};
 
 	const subtractBalance = (expense) => {
-		setTotalIncome((prevTotalIncome) => {
-			if (expense.amount >= prevTotalIncome) {
-				return prevTotalIncome;
-			}
-			return Math.max(0, prevTotalIncome - expense.amount);
-		});
-		setExpenseModelOpen(!expenseModelOpen);
+		setTotalIncome((prevTotalIncome) =>
+			Math.max(0, prevTotalIncome - expense.amount)
+		);
+		setExpenseModelOpen(false);
 	};
 
 	return (
 		<div className="w-full overflow-hidden flex flex-col items-center ">
-			{/* -------- Model Box------- */}
-			{incomeModelOpen ? (
-				<ModelBox show={incomeModelOpen} onClose={setIncomeModelOpen}>
-					<IncomeModelBox
-						income={income}
-						setIncome={setIncome}
-						getIncomeData={getIncomeData}
-						setTotalIncome={setTotalIncome}
-					/>
-				</ModelBox>
-			) : (
-				<ModelBox show={expenseModelOpen} onClose={setExpenseModelOpen}>
-					<ExpenseModelBox
-						expense={expense}
-						setExpense={setExpense}
-						getExpenseData={getExpenseData}
-						subtractBalance={subtractBalance}
-					/>
-				</ModelBox>
-			)}
+			<ModelBox
+				show={incomeModelOpen}
+				onClose={() => setIncomeModelOpen(false)}
+			>
+				<IncomeModelBox
+					income={income}
+					setIncome={setIncome}
+					getIncomeData={getIncomeData}
+					setTotalIncome={setTotalIncome}
+				/>
+			</ModelBox>
+			<ModelBox
+				show={expenseModelOpen}
+				onClose={() => setExpenseModelOpen(false)}
+			>
+				<ExpenseModelBox
+					expense={expense}
+					setExpense={setExpense}
+					getExpenseData={getExpenseData}
+					subtractBalance={subtractBalance}
+				/>
+			</ModelBox>
 			<main className="container max-w-screen-md mx-auto">
-				{/* ---------Balance Section-------- */}
 				<section className="flex flex-col md:flex-row items-center justify-between gap-4 mb-14">
 					<div>
 						<p className="text-xs text-grayColor text-center md:text-left">
@@ -96,13 +133,13 @@ export default function Home() {
 					</div>
 					<div className="flex items-center gap-2">
 						<button
-							onClick={() => setExpenseModelOpen(!expenseModelOpen)}
+							onClick={() => setExpenseModelOpen(true)}
 							className="expenseBtn"
 						>
 							+ Expenses
 						</button>
 						<button
-							onClick={() => setIncomeModelOpen(!incomeModelOpen)}
+							onClick={() => setIncomeModelOpen(true)}
 							className="incomeBtn"
 						>
 							+ Incomes
