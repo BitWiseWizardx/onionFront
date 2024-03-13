@@ -2,11 +2,17 @@
 import React, { useEffect, useRef } from "react";
 import Link from "next/link";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function RegisterForm() {
+	const router = useRouter();
 	const nameRef = useRef();
 	const emailRef = useRef();
 	const PassowrdRef = useRef();
+
+	if (localStorage.getItem("token")) {
+		router.push("/");
+	}
 
 	const getRegisterUsers = async (e) => {
 		e.preventDefault();
@@ -16,6 +22,13 @@ export default function RegisterForm() {
 			password: PassowrdRef.current.value,
 		});
 		console.log(getUsers);
+
+		if (getUsers.data.token) {
+			localStorage.setItem("token", getUsers.data.token);
+			router.push("/");
+		} else {
+			alert("Something Wrong");
+		}
 	};
 
 	const InputData = [
@@ -49,9 +62,12 @@ export default function RegisterForm() {
 	];
 
 	return (
-		<div className="container max-w-screen-sm mx-auto flex flex-col items-center gap-10 bg-grayColor/20 backdrop-blur-md rounded-lg">
+		<div className="container absolute top-0 w-full h-screen flex flex-col items-center justify-center gap-10 bg-grayColor/20 backdrop-blur-md rounded-lg">
 			<h1 className="text-5xl font-bold">Register</h1>
-			<form onSubmit={getRegisterUsers} className=" w-full space-y-5 px-10">
+			<form
+				onSubmit={getRegisterUsers}
+				className="w-full lg:w-5/12 mx-auto space-y-5 px-10"
+			>
 				{InputData.map((input, index) => (
 					<div key={index} className="relative">
 						<input

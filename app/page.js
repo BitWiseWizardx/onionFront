@@ -6,35 +6,40 @@ import ExpenseHistory from "../components/expenseHistory";
 import ExpenseModelBox from "../components/expenseModelBox";
 import ModelBox from "../components/modelBox";
 import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+	const router = useRouter();
 	const [incomeModelOpen, setIncomeModelOpen] = useState(false);
 	const [expenseModelOpen, setExpenseModelOpen] = useState(false);
 	const [income, setIncome] = useState([]);
 	const [expense, setExpense] = useState([]);
 	const [totalIncome, setTotalIncome] = useState(0);
 
+	if (!localStorage.getItem("token")) {
+		router.push("/register");
+	}
+
 	useEffect(() => {
-		getIncomeData();
+		const token = localStorage.getItem("token");
+		getIncomeData(token);
 		getExpenseData();
-		getTotalIncomeData();
 	}, []);
-	const getIncomeData = async () => {
+	const getIncomeData = async (token) => {
 		try {
 			const getIncome = await axios.get("http://localhost:4001/income");
+
 			setIncome(getIncome.data);
 			console.log(getIncome.data);
+
+			const totalIncomeData = getIncome.data;
+			const newTotalBalance = totalIncomeData.reduce((accVal, curVal) => {
+				return accVal + curVal.amount;
+			}, 0);
+			setTotalIncome(newTotalBalance);
 		} catch (error) {
 			console.error(error);
 		}
-	};
-
-	const getTotalIncomeData = async () => {
-		const newTotalBalance = await income.reduce((accVal, curVal) => {
-			return accVal + curVal.amount;
-		}, 0);
-		setTotalIncome(newTotalBalance);
-		console.log(income);
 	};
 	const getExpenseData = async () => {
 		try {
@@ -44,6 +49,16 @@ export default function Home() {
 		} catch (error) {
 			console.error(error);
 		}
+	};
+
+	const subtractBalance = (expense) => {
+		setTotalIncome((prevTotalIncome) => {
+			if (expense.amount >= prevTotalIncome) {
+				return prevTotalIncome;
+			}
+			return Math.max(0, prevTotalIncome - expense.amount);
+		});
+		setExpenseModelOpen(!expenseModelOpen);
 	};
 
 	return (
@@ -64,6 +79,7 @@ export default function Home() {
 						expense={expense}
 						setExpense={setExpense}
 						getExpenseData={getExpenseData}
+						subtractBalance={subtractBalance}
 					/>
 				</ModelBox>
 			)}
@@ -92,13 +108,6 @@ export default function Home() {
 							+ Incomes
 						</button>
 					</div>
-				</section>
-
-				{/* -------Expenses Section-------- */}
-				<section className="space-y-1">
-					<h1 className="font-bold">Your Expences</h1>
-					<div className="w-full h-[0.5px] bg-white"></div>
-					<ExpenseHistory expense={expense} />
 				</section>
 			</main>
 		</div>

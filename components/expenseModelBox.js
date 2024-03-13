@@ -8,8 +8,7 @@ export default function ExpenseModelBox({
 	expense,
 	setExpense,
 	getExpenseData,
-	show,
-	onClose,
+	subtractBalance,
 }) {
 	const descriptionRef = useRef();
 	const quantityRef = useRef();
@@ -20,12 +19,12 @@ export default function ExpenseModelBox({
 		const createdExpense = await axios.post("http://localhost:4001/expense", {
 			description: descriptionRef.current.value,
 			quantity: parseInt(quantityRef.current.value),
-			amount: amountRef.current.value,
+			amount: parseInt(amountRef.current.value),
 			created_at: new Date(),
+			user_id: 1,
 		});
 		getExpenseData();
 		console.log(createdExpense);
-		onClose(!show);
 	};
 
 	const deleteExpenseData = async (id) => {
@@ -124,7 +123,10 @@ export default function ExpenseModelBox({
 								{currencyFormatter(expense.amount)}
 							</p>
 							<div className="flex items-center justify-end gap-5 col-span-2">
-								<MdOutlinePayment className="text-greenColor/80  text-lg" />
+								<MdOutlinePayment
+									onClick={() => subtractBalance(expense)}
+									className="text-greenColor/80  text-lg"
+								/>
 								<FaRegTrashAlt
 									onClick={() => deleteExpenseData(expense.id)}
 									className="text-accentColor/80"
