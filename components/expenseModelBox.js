@@ -16,22 +16,32 @@ export default function ExpenseModelBox({
 
 	const createExpenseData = async (e) => {
 		e.preventDefault();
-		const createdExpense = await axios.post("http://localhost:4001/expense", {
-			description: descriptionRef.current.value,
-			quantity: parseInt(quantityRef.current.value),
-			amount: parseInt(amountRef.current.value),
-			created_at: new Date(),
-			user_id: 1,
-		});
-		getExpenseData();
+		const createdExpense = await axios.post(
+			"http://localhost:4001/expense",
+			{
+				description: descriptionRef.current.value,
+				quantity: parseInt(quantityRef.current.value),
+				amount: parseInt(amountRef.current.value),
+				created_at: new Date(),
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			}
+		);
+		getExpenseData(localStorage.getItem("token"));
 		console.log(createdExpense);
+		descriptionRef.current.value = "";
+		quantityRef.current.value = "";
+		amountRef.current.value = "";
 	};
 
 	const deleteExpenseData = async (id) => {
 		const deletedExpense = await axios.delete(
 			"http://localhost:4001/expense/" + id
 		);
-		getExpenseData();
+		getExpenseData(localStorage.getItem("token"));
 		console.log(deletedExpense);
 	};
 

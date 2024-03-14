@@ -4,42 +4,51 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import axios from "axios";
 
 export default function IncomeModelBox({
-	income,
-	setIncome,
+	incomes,
 	getIncomeData,
 	setTotalIncome,
-	show,
-	onClose,
 }) {
 	const descriptionRef = useRef();
 	const amountRef = useRef();
 
+	useEffect(() => {
+		const newTotalBalance = incomes.reduce((accVal, curVal) => {
+			return accVal + curVal.amount;
+		}, 0);
+		setTotalIncome(newTotalBalance);
+		console.log(newTotalBalance);
+	}, [incomes]);
+
 	const createIncomeData = async (e) => {
 		e.preventDefault();
-		const createdIncome = await axios.post("http://localhost:4001/income", {
-			description: descriptionRef.current.value,
-			amount: parseInt(amountRef.current.value),
-			created_at: new Date(),
-			user_id: createdIncome.data.user_id,
-		});
-		getIncomeData();
+		const createdIncome = await axios.post(
+			"http://localhost:4001/income",
+			{
+				description: descriptionRef.current.value,
+				amount: parseInt(amountRef.current.value),
+				created_at: new Date(),
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${localStorage.getItem("token")}`,
+				},
+			}
+		);
+
+		getIncomeData(localStorage.getItem("token"));
 		console.log(createdIncome.data);
+		descriptionRef.current.value = "";
+		amountRef.current.value = "";
 	};
 
 	const deleteIncomeData = async (id) => {
 		const deletedIncome = await axios.delete(
 			"http://localhost:4001/income/" + id
 		);
-		getIncomeData();
+		getIncomeData(localStorage.getItem("token"));
 		console.log(deletedIncome);
 	};
-	useEffect(() => {
-		const newTotalBalance = income.reduce((accVal, curVal) => {
-			return accVal + curVal.amount;
-		}, 0);
-		setTotalIncome(newTotalBalance);
-		console.log(newTotalBalance);
-	}, [income]);
+
 	// const incomeHandler = (e) => {
 	// 	e.preventDefault();
 
@@ -102,7 +111,7 @@ export default function IncomeModelBox({
 				<h1 className="text-lg font-bold">Income History</h1>
 				<div className="w-full h-[0.5px] rounded-full bg-white"></div>
 				<div className="space-y-1 text-bgColor mt-2 h-[300px] overflow-y-auto">
-					{income?.map((income) => (
+					{incomes.map((income) => (
 						<div
 							key={income.id}
 							className="bg-bgColor/80 text-white px-4 py-2 rounded-sm flex justify-between gap-1"

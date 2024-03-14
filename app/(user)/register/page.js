@@ -8,7 +8,7 @@ export default function RegisterForm() {
 	const router = useRouter();
 	const nameRef = useRef();
 	const emailRef = useRef();
-	const PassowrdRef = useRef();
+	const passwordRef = useRef();
 
 	if (localStorage.getItem("token")) {
 		router.push("/");
@@ -19,7 +19,7 @@ export default function RegisterForm() {
 		const getUsers = await axios.post("http://localhost:4001/user/register", {
 			name: nameRef.current.value,
 			email: emailRef.current.value,
-			password: PassowrdRef.current.value,
+			password: passwordRef.current.value,
 		});
 		console.log(getUsers);
 
@@ -34,7 +34,7 @@ export default function RegisterForm() {
 	const InputData = [
 		{
 			id: "name",
-			for: "name",
+			htmlFor: "name",
 			label: "User Name",
 			name: "name",
 			ref: nameRef,
@@ -43,7 +43,7 @@ export default function RegisterForm() {
 		},
 		{
 			id: "email",
-			for: "email",
+			htmlFor: "email",
 			label: "Email",
 			name: "email",
 			ref: emailRef,
@@ -52,10 +52,10 @@ export default function RegisterForm() {
 		},
 		{
 			id: "password",
-			for: "password",
+			htmlFor: "password",
 			label: "Password",
 			name: "password",
-			ref: PassowrdRef,
+			ref: passwordRef,
 			inputType: "password",
 			placeholder: "Password",
 		},
@@ -71,7 +71,7 @@ export default function RegisterForm() {
 				{InputData.map((input, index) => (
 					<div key={index} className="relative">
 						<input
-							autocomplete="off"
+							autoComplete="off"
 							id={input.id}
 							type={input.inputType}
 							ref={input.ref}
@@ -81,7 +81,7 @@ export default function RegisterForm() {
 							className="peer placeholder-transparent h-10 w-full bg-transparent border-b-2 border-white focus:outline-none focus:borer-rose-600 text-lg"
 						/>
 						<label
-							for={input.for}
+							htmlFor={input.for}
 							className="absolute left-0 -top-3.5 text-xs peer-placeholder-shown:text-base peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 
 							peer-focus:text-white/70 peer-focus:text-xs"
 						>

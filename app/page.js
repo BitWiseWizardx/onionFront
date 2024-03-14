@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { currencyFormatter } from "../lib/utils";
 import IncomeModelBox from "../components/incomeModelBox";
-import ExpenseHistory from "../components/expenseHistory";
 import ExpenseModelBox from "../components/expenseModelBox";
 import ModelBox from "../components/modelBox";
 import axios from "axios";
@@ -12,41 +11,19 @@ export default function Home() {
 	const router = useRouter();
 	const [incomeModelOpen, setIncomeModelOpen] = useState(false);
 	const [expenseModelOpen, setExpenseModelOpen] = useState(false);
-	const [income, setIncome] = useState([]);
+	const [incomes, setIncomes] = useState([]);
 	const [expense, setExpense] = useState([]);
 	const [totalIncome, setTotalIncome] = useState(0);
-	const [user, setUser] = useState(null);
+
+	const token = localStorage.getItem("token");
+	if (!token) {
+		router.push("/register");
+	}
 
 	useEffect(() => {
-		const token = localStorage.getItem("token");
-		if (!token) {
-			router.push("/register");
-		} else {
-			fetchUserData(token);
-			getIncomeData(token);
-			getExpenseData(token);
-		}
+		getIncomeData(token);
+		getExpenseData(token);
 	}, []);
-
-	const fetchUserData = async (token) => {
-		try {
-			const response = await axios.get(
-				"http://localhost:4001/user/protected",
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-			setUser(response.data.user);
-			if (!response.data.user) {
-				localStorage.removeItem("token");
-				router.push("/register");
-			}
-		} catch (error) {
-			handleRequestError(error);
-		}
-	};
 
 	const getIncomeData = async (token) => {
 		try {
@@ -55,7 +32,8 @@ export default function Home() {
 					Authorization: `Bearer ${token}`,
 				},
 			});
-			setIncome(response.data);
+			console.log(response.data);
+			setIncomes(response.data);
 			updateTotalIncome(response.data);
 		} catch (error) {
 			handleRequestError(error);
@@ -69,6 +47,7 @@ export default function Home() {
 					Authorization: `Bearer ${token}`,
 				},
 			});
+			console.log(token);
 			setExpense(response.data);
 		} catch (error) {
 			handleRequestError(error);
@@ -80,15 +59,15 @@ export default function Home() {
 		setTotalIncome(total);
 	};
 
-	const handleRequestError = (error) => {
-		if (error.response && error.response.status === 401) {
-			localStorage.removeItem("token");
-			router.push("/register");
-		} else {
-			alert("An error occurred while processing your request.");
-			console.error(error);
-		}
-	};
+	// const handleRequestError = (error) => {
+	// 	if (error.response && error.response.status === 401) {
+	// 		localStorage.removeItem("token");
+	// 		router.push("/register");
+	// 	} else {
+	// 		alert("An error occurred while processing your request.");
+	// 		console.error(error);
+	// 	}
+	// };
 
 	const subtractBalance = (expense) => {
 		setTotalIncome((prevTotalIncome) =>
@@ -104,8 +83,8 @@ export default function Home() {
 				onClose={() => setIncomeModelOpen(false)}
 			>
 				<IncomeModelBox
-					income={income}
-					setIncome={setIncome}
+					incomes={incomes}
+					setIncomes={setIncomes}
 					getIncomeData={getIncomeData}
 					setTotalIncome={setTotalIncome}
 				/>

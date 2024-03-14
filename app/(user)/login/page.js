@@ -34,7 +34,7 @@ export default function LoginForm() {
 	const InputData = [
 		{
 			id: "email",
-			for: "email",
+			htmlFor: "email",
 			label: "Email",
 			name: "email",
 			ref: emailRef,
@@ -43,7 +43,7 @@ export default function LoginForm() {
 		},
 		{
 			id: "password",
-			for: "password",
+			htmlFor: "password",
 			label: "Password",
 			name: "password",
 			ref: passwordRef,
@@ -62,7 +62,7 @@ export default function LoginForm() {
 				{InputData.map((input, index) => (
 					<div key={index} className="relative">
 						<input
-							autocomplete="off"
+							autoComplete="off"
 							id={input.id}
 							type={input.inputType}
 							ref={input.ref}
@@ -72,7 +72,7 @@ export default function LoginForm() {
 							className="peer placeholder-transparent h-10 w-full bg-transparent border-b-2 border-white focus:outline-none focus:borer-rose-600 text-lg"
 						/>
 						<label
-							for={input.for}
+							htmlFor={input.htmlFor}
 							className="absolute left-0 -top-3.5 text-xs peer-placeholder-shown:text-base peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 
 							peer-focus:text-white/70 peer-focus:text-xs"
 						>

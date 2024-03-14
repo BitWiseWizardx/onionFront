@@ -1,5 +1,4 @@
 "use client";
-import { TfiStatsUp } from "react-icons/tfi";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,7 +18,6 @@ export default function Navigation() {
 				</p>
 			</div>
 			<div className="flex items-center gap-3 md:gap-6">
-				<TfiStatsUp className="text-2xl hover:-mt-2 hover:text-accentColor duration-300" />
 				<div
 					onClick={() => setShowLoginModel(!showLoginModel)}
 					className="w-[38px] h-[38px] rounded-full border-2"
