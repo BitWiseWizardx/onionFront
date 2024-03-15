@@ -10,9 +10,11 @@ export default function RegisterForm() {
 	const emailRef = useRef();
 	const passwordRef = useRef();
 
-	if (localStorage.getItem("token")) {
-		router.push("/");
-	}
+	useEffect(() => {
+		if (localStorage.getItem("token")) {
+			router.push("/");
+		}
+	}, []);
 
 	const getRegisterUsers = async (e) => {
 		e.preventDefault();
@@ -62,7 +64,7 @@ export default function RegisterForm() {
 	];
 
 	return (
-		<div className="container absolute top-0 w-full h-screen flex flex-col items-center justify-center gap-10 bg-grayColor/20 backdrop-blur-md rounded-lg">
+		<div className="container absolute top-0 max-w-screen-2xl h-screen flex flex-col items-center justify-center gap-10 bg-grayColor/20 backdrop-blur-md rounded-lg">
 			<h1 className="text-5xl font-bold">Register</h1>
 			<form
 				onSubmit={getRegisterUsers}
@@ -71,7 +73,6 @@ export default function RegisterForm() {
 				{InputData.map((input, index) => (
 					<div key={index} className="relative">
 						<input
-							autoComplete="off"
 							id={input.id}
 							type={input.inputType}
 							ref={input.ref}
@@ -81,7 +82,7 @@ export default function RegisterForm() {
 							className="peer placeholder-transparent h-10 w-full bg-transparent border-b-2 border-white focus:outline-none focus:borer-rose-600 text-lg"
 						/>
 						<label
-							htmlFor={input.for}
+							htmlFor={input.htmlFor}
 							className="absolute left-0 -top-3.5 text-xs peer-placeholder-shown:text-base peer-placeholder-shown:top-2 transition-all peer-focus:-top-3.5 
 							peer-focus:text-white/70 peer-focus:text-xs"
 						>

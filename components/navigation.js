@@ -1,28 +1,10 @@
 "use client";
-import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { PiUserCircleLight } from "react-icons/pi";
-import axios from "axios";
-export default function Navigation() {
+export default function Navigation({ authUser }) {
 	const router = useRouter();
 	const [showLoginModel, setShowLoginModel] = useState(false);
-	const [authUser, setAuthUser] = useState();
-
-	const token = localStorage.getItem("token");
-
-	useEffect(() => {
-		getAuthUser(token);
-	}, []);
-
-	const getAuthUser = async () => {
-		const user = await axios.get("http://localhost:4001/auth-user", {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		});
-		setAuthUser(user.data);
-		console.log(user.data);
-	};
 
 	return (
 		<header className="relative container max-w-screen-md mx-auto flex items-center justify-between">

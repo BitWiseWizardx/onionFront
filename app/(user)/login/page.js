@@ -62,7 +62,6 @@ export default function LoginForm() {
 				{InputData.map((input, index) => (
 					<div key={index} className="relative">
 						<input
-							autoComplete="off"
 							id={input.id}
 							type={input.inputType}
 							ref={input.ref}

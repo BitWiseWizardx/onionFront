@@ -6,6 +6,7 @@ import ExpenseModelBox from "../components/expenseModelBox";
 import ModelBox from "../components/modelBox";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import Navigation from "../components/navigation";
 
 export default function Home() {
 	const router = useRouter();
@@ -14,16 +15,27 @@ export default function Home() {
 	const [incomes, setIncomes] = useState([]);
 	const [expense, setExpense] = useState([]);
 	const [totalIncome, setTotalIncome] = useState(0);
-
-	const token = localStorage.getItem("token");
-	if (!token) {
-		router.push("/register");
-	}
+	const [authUser, setAuthUser] = useState();
 
 	useEffect(() => {
+		const token = localStorage.getItem("token");
+		if (!token) {
+			router.push("/register");
+		}
+		getAuthUser(token);
 		getIncomeData(token);
 		getExpenseData(token);
 	}, []);
+
+	const getAuthUser = async (token) => {
+		const user = await axios.get("http://localhost:4001/auth-user", {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		setAuthUser(user.data);
+		console.log(user.data);
+	};
 
 	const getIncomeData = async (token) => {
 		try {
@@ -59,16 +71,6 @@ export default function Home() {
 		setTotalIncome(total);
 	};
 
-	// const handleRequestError = (error) => {
-	// 	if (error.response && error.response.status === 401) {
-	// 		localStorage.removeItem("token");
-	// 		router.push("/register");
-	// 	} else {
-	// 		alert("An error occurred while processing your request.");
-	// 		console.error(error);
-	// 	}
-	// };
-
 	const subtractBalance = (expense) => {
 		setTotalIncome((prevTotalIncome) =>
 			Math.max(0, prevTotalIncome - expense.amount)
@@ -77,7 +79,8 @@ export default function Home() {
 	};
 
 	return (
-		<div className="w-full overflow-hidden flex flex-col items-center ">
+		<div className="overflow-hidden flex flex-col items-center ">
+			<Navigation authUser={authUser} />
 			<ModelBox
 				show={incomeModelOpen}
 				onClose={() => setIncomeModelOpen(false)}
