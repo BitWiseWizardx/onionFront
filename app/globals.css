@@ -22,7 +22,7 @@
 
 @layer utilities {
 	.expenseBtn {
-		@apply px-4 py-2 border border-white rounded-lg text-xs text-accentColor/80 border-accentColor/50 hover:text-accentColor/90 hover:border-accentColor/40 focus:text-accentColor focus:border-accentColor/50;
+		@apply px-4 py-2 border border-white rounded-lg text-xs text-accentColor/90 border-accentColor/60 hover:text-accentColor hover:border-accentColor/50 focus:text-accentColor focus:border-accentColor/50;
 	}
 
 	.incomeBtn {

@@ -1,11 +1,28 @@
 "use client";
-import { useState } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { PiUserCircleLight } from "react-icons/pi";
+import axios from "axios";
 export default function Navigation() {
 	const router = useRouter();
 	const [showLoginModel, setShowLoginModel] = useState(false);
+	const [authUser, setAuthUser] = useState();
+
+	const token = localStorage.getItem("token");
+
+	useEffect(() => {
+		getAuthUser(token);
+	}, []);
+
+	const getAuthUser = async () => {
+		const user = await axios.get("http://localhost:4001/auth-user", {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+		setAuthUser(user.data);
+		console.log(user.data);
+	};
 
 	return (
 		<header className="relative container max-w-screen-md mx-auto flex items-center justify-between">
@@ -20,34 +37,32 @@ export default function Navigation() {
 			<div className="flex items-center gap-3 md:gap-6">
 				<div
 					onClick={() => setShowLoginModel(!showLoginModel)}
-					className="w-[38px] h-[38px] rounded-full border-2"
+					className="text-3xl"
 				>
-					<img
-						className="w-full h-full object-cover rounded-full"
-						src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTzewQ_JGAS5FVP6PWfoTSzZ9TnNJWuMJFfLg&usqp=CAU"
-						alt="user profile"
-					/>
+					<PiUserCircleLight />
 				</div>
 			</div>
 
-			{showLoginModel && (
-				<ul className="absolute right-0 -bottom-10 bg-white/80 text-bgColor rounded-lg border-2 border-bgColor gap-6">
-					<li className="border-b border-bgColor px-6 py-2 hover:bg-white rounded-t-lg">
-						<Link href="/">Profile</Link>
-					</li>
-					<li className="px-6 py-2 hover:bg-white rounded-b-lg">
-						<button
-							onClick={() => {
-								localStorage.removeItem("token");
-								router.push("/register");
-								setShowLoginModel(!showLoginModel);
-							}}
-						>
-							Log Out
-						</button>
-					</li>
-				</ul>
-			)}
+			{showLoginModel ? (
+				<div className="absolute right-0 -bottom-28 md:-bottom-24 z-50 bg-white/80 backdrop-blur-md text-bgColor rounded-lg flex flex-col items-center gap-4 p-5">
+					<div>
+						<h1 className="text-2xl font-bold text-center pb-2">
+							{authUser.name}
+						</h1>
+						<p className="text-sm">{authUser.email}</p>
+					</div>
+					<button
+						onClick={() => {
+							localStorage.removeItem("token");
+							router.push("/register");
+							setShowLoginModel(!showLoginModel);
+						}}
+						className="px-3 py-1.5 rounded-md bg-bgColor text-white"
+					>
+						Logout
+					</button>
+				</div>
+			) : null}
 		</header>
 	);
 }
