@@ -1,5 +1,6 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
+import { PiEyeClosedDuotone, PiEye } from "react-icons/pi";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -9,12 +10,11 @@ export default function RegisterForm() {
 	const nameRef = useRef();
 	const emailRef = useRef();
 	const passwordRef = useRef();
+	const [showPassword, setShowPassword] = useState(false);
 
-	useEffect(() => {
-		if (localStorage.getItem("token")) {
-			router.push("/");
-		}
-	}, []);
+	const togglePasswordVisibility = () => {
+		setShowPassword(!showPassword);
+	};
 
 	const getRegisterUsers = async (e) => {
 		e.preventDefault();
@@ -58,7 +58,7 @@ export default function RegisterForm() {
 			label: "Password",
 			name: "password",
 			ref: passwordRef,
-			inputType: "password",
+			inputType: showPassword ? "text" : "password",
 			placeholder: "Password",
 		},
 	];
@@ -88,6 +88,17 @@ export default function RegisterForm() {
 						>
 							{input.label}
 						</label>
+						{input.name === "password" && (
+							<div className="absolute text-lg right-3 top-1/2 transform -translate-y-1/2">
+								{showPassword ? (
+									<PiEye onClick={togglePasswordVisibility} />
+								) : (
+									<PiEyeClosedDuotone
+										onClick={togglePasswordVisibility}
+									/>
+								)}
+							</div>
+						)}
 					</div>
 				))}
 				<div className="flex items-center gap-1">

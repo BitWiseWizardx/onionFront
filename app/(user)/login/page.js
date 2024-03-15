@@ -1,17 +1,23 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { PiEyeClosedDuotone, PiEye } from "react-icons/pi";
 
 export default function LoginForm() {
 	const router = useRouter();
 	const emailRef = useRef();
 	const passwordRef = useRef();
+	const [showPassword, setShowPassword] = useState(false);
 
 	if (localStorage.getItem("token")) {
 		router.push("/");
 	}
+
+	const togglePasswordVisibility = () => {
+		setShowPassword(!showPassword);
+	};
 
 	const getLoginUser = async (e) => {
 		e.preventDefault();
@@ -47,7 +53,7 @@ export default function LoginForm() {
 			label: "Password",
 			name: "password",
 			ref: passwordRef,
-			inputType: "password",
+			inputType: showPassword ? "text" : "password",
 			placeholder: "Password",
 		},
 	];
@@ -77,7 +83,17 @@ export default function LoginForm() {
 						>
 							{input.label}
 						</label>
-						{/* <p className="text-xs text-accentColor pt-1">Hello Hello</p> */}
+						{input.name === "password" && (
+							<div className="absolute text-lg right-3 top-1/2 transform -translate-y-1/2">
+								{showPassword ? (
+									<PiEye onClick={togglePasswordVisibility} />
+								) : (
+									<PiEyeClosedDuotone
+										onClick={togglePasswordVisibility}
+									/>
+								)}
+							</div>
+						)}
 					</div>
 				))}
 				<div className="flex justify-end">
