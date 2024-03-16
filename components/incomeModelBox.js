@@ -7,6 +7,7 @@ export default function IncomeModelBox({
 	incomes,
 	getIncomeData,
 	setTotalIncome,
+	totalIncome,
 }) {
 	const descriptionRef = useRef();
 	const amountRef = useRef();
@@ -108,24 +109,28 @@ export default function IncomeModelBox({
 				</div>
 			</form>
 			<div>
-				<h1 className="text-lg font-bold">Income History</h1>
+				<h1 className="text-lg font-bold">
+					Total Balance : {currencyFormatter(totalIncome)}
+				</h1>
 				<div className="w-full h-[0.5px] rounded-full bg-white"></div>
 				<div className="space-y-1 text-bgColor mt-2 h-[300px] overflow-y-auto">
-					{incomes.map((income) => (
-						<div
-							key={income.id}
-							className="bg-bgColor/80 text-white px-4 py-2 rounded-sm flex justify-between gap-1"
-						>
-							<h1>{income.description}</h1>
-							<p className="text-sm">
-								{currencyFormatter(income.amount)}
-							</p>
-							<FaRegTrashAlt
-								onClick={() => deleteIncomeData(income.id)}
-								className="text-accentColor/80"
-							/>
-						</div>
-					))}
+					{incomes
+						? incomes.map((income) => (
+								<div
+									key={income.id}
+									className="bg-bgColor/80 text-white px-4 py-2 rounded-sm flex justify-between gap-1"
+								>
+									<h1>{income.description}</h1>
+									<p className="text-sm">
+										{currencyFormatter(income.amount)}
+									</p>
+									<FaRegTrashAlt
+										onClick={() => deleteIncomeData(income.id)}
+										className="text-accentColor/80"
+									/>
+								</div>
+						  ))
+						: null}
 				</div>
 			</div>
 		</div>

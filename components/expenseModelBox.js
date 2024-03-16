@@ -5,10 +5,10 @@ import { FaRegTrashAlt } from "react-icons/fa";
 import axios from "axios";
 
 export default function ExpenseModelBox({
-	expense,
-	setExpense,
+	expenses,
 	getExpenseData,
 	subtractBalance,
+	totalIncome,
 }) {
 	const descriptionRef = useRef();
 	const quantityRef = useRef();
@@ -119,31 +119,35 @@ export default function ExpenseModelBox({
 				</div>
 			</form>
 			<div>
-				<h1 className="text-lg font-bold">Expense History</h1>
+				<h1 className="text-lg font-bold">
+					Total Balance : {currencyFormatter(totalIncome)}
+				</h1>
 				<div className="w-full h-[0.5px] rounded-full bg-white"></div>
 				<div className="space-y-1 text-bgColor mt-2 h-[230px] overflow-y-auto">
-					{expense.map((expense) => (
-						<div
-							key={expense.id}
-							className="bg-bgColor/80 text-white px-4 py-2 rounded-sm grid grid-cols-12 gap-1"
-						>
-							<p className="col-span-1">{expense.quantity}</p>
-							<h1 className="col-span-4">{expense.description}</h1>
-							<p className="text-sm col-span-5">
-								{currencyFormatter(expense.amount)}
-							</p>
-							<div className="flex items-center justify-end gap-5 col-span-2">
-								<MdOutlinePayment
-									onClick={() => subtractBalance(expense)}
-									className="text-greenColor/80  text-lg"
-								/>
-								<FaRegTrashAlt
-									onClick={() => deleteExpenseData(expense.id)}
-									className="text-accentColor/80"
-								/>
-							</div>
-						</div>
-					))}
+					{expenses
+						? expenses.map((expense) => (
+								<div
+									key={expense.id}
+									className="bg-bgColor/80 text-white px-4 py-2 rounded-sm grid grid-cols-12 gap-1"
+								>
+									<p className="col-span-1">{expense.quantity}</p>
+									<h1 className="col-span-4">{expense.description}</h1>
+									<p className="text-sm col-span-5">
+										{currencyFormatter(expense.amount)}
+									</p>
+									<div className="flex items-center justify-end gap-5 col-span-2">
+										<MdOutlinePayment
+											onClick={() => subtractBalance(expense)}
+											className="text-greenColor/80  text-lg"
+										/>
+										<FaRegTrashAlt
+											onClick={() => deleteExpenseData(expense.id)}
+											className="text-accentColor/80"
+										/>
+									</div>
+								</div>
+						  ))
+						: null}
 				</div>
 			</div>
 		</div>

@@ -4,6 +4,7 @@ import { currencyFormatter } from "../lib/utils";
 import IncomeModelBox from "../components/incomeModelBox";
 import ExpenseModelBox from "../components/expenseModelBox";
 import ModelBox from "../components/modelBox";
+import History from "../components/history";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Navigation from "../components/navigation";
@@ -13,14 +14,16 @@ export default function Home() {
 	const [incomeModelOpen, setIncomeModelOpen] = useState(false);
 	const [expenseModelOpen, setExpenseModelOpen] = useState(false);
 	const [incomes, setIncomes] = useState([]);
-	const [expense, setExpense] = useState([]);
+	const [expenses, setExpenses] = useState([]);
 	const [totalIncome, setTotalIncome] = useState(0);
-	const [authUser, setAuthUser] = useState();
+	const [authUser, setAuthUser] = useState(null);
+	const [error, setError] = useState(null);
 
 	useEffect(() => {
 		const token = localStorage.getItem("token");
 		if (!token) {
-			router.push("/register");
+			router.push("/login");
+			return;
 		}
 		getAuthUser(token);
 		getIncomeData(token);
@@ -28,13 +31,17 @@ export default function Home() {
 	}, []);
 
 	const getAuthUser = async (token) => {
-		const user = await axios.get("http://localhost:4001/auth-user", {
-			headers: {
-				Authorization: `Bearer ${token}`,
-			},
-		});
-		setAuthUser(user.data);
-		console.log(user.data);
+		try {
+			const response = await axios.get("http://localhost:4001/auth-user", {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			});
+			setAuthUser(response.data);
+		} catch (error) {
+			console.error("Error fetching auth user:", error);
+			setError("Error fetching auth user");
+		}
 	};
 
 	const getIncomeData = async (token) => {
@@ -44,11 +51,11 @@ export default function Home() {
 					Authorization: `Bearer ${token}`,
 				},
 			});
-			console.log(response.data);
 			setIncomes(response.data);
 			updateTotalIncome(response.data);
 		} catch (error) {
-			handleRequestError(error);
+			console.error("Error fetching income data:", error);
+			setError("Error fetching income data");
 		}
 	};
 
@@ -59,10 +66,10 @@ export default function Home() {
 					Authorization: `Bearer ${token}`,
 				},
 			});
-			console.log(token);
-			setExpense(response.data);
+			setExpenses(response.data);
 		} catch (error) {
-			handleRequestError(error);
+			console.error("Error fetching expense data:", error);
+			setError("Error fetching expense data");
 		}
 	};
 
@@ -75,7 +82,6 @@ export default function Home() {
 		setTotalIncome((prevTotalIncome) =>
 			Math.max(0, prevTotalIncome - expense.amount)
 		);
-		setExpenseModelOpen(false);
 	};
 
 	return (
@@ -89,6 +95,7 @@ export default function Home() {
 					incomes={incomes}
 					setIncomes={setIncomes}
 					getIncomeData={getIncomeData}
+					totalIncome={totalIncome}
 					setTotalIncome={setTotalIncome}
 				/>
 			</ModelBox>
@@ -97,10 +104,11 @@ export default function Home() {
 				onClose={() => setExpenseModelOpen(false)}
 			>
 				<ExpenseModelBox
-					expense={expense}
-					setExpense={setExpense}
+					expenses={expenses}
+					setExpenses={setExpenses}
 					getExpenseData={getExpenseData}
 					subtractBalance={subtractBalance}
+					totalIncome={totalIncome}
 				/>
 			</ModelBox>
 			<main className="container max-w-screen-md mx-auto">
@@ -128,6 +136,7 @@ export default function Home() {
 						</button>
 					</div>
 				</section>
+				<History />
 			</main>
 		</div>
 	);
