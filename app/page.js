@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { currencyFormatter } from "../lib/utils";
 import IncomeModelBox from "../components/incomeModelBox";
 import ExpenseModelBox from "../components/expenseModelBox";
@@ -17,17 +17,28 @@ export default function Home() {
 	const [expenses, setExpenses] = useState([]);
 	const [totalIncome, setTotalIncome] = useState(0);
 	const [authUser, setAuthUser] = useState(null);
-	const [error, setError] = useState(null);
+
+	const descriptionRef = useRef();
+	const amountRef = useRef();
 
 	useEffect(() => {
-		const token = localStorage.getItem("token");
-		if (!token) {
-			router.push("/login");
-			return;
-		}
-		getAuthUser(token);
-		getIncomeData(token);
-		getExpenseData(token);
+		const fetchData = async () => {
+			const token = localStorage.getItem("token");
+			if (!token) {
+				router.push("/login");
+				return;
+			}
+			try {
+				await getAuthUser(token);
+				await getIncomeData(token);
+				await createIncomeData(token);
+				await getExpenseData(token);
+			} catch (error) {
+				console.error("Error fetching data:", error);
+			}
+		};
+
+		fetchData();
 	}, []);
 
 	const getAuthUser = async (token) => {
@@ -40,7 +51,6 @@ export default function Home() {
 			setAuthUser(response.data);
 		} catch (error) {
 			console.error("Error fetching auth user:", error);
-			setError("Error fetching auth user");
 		}
 	};
 
@@ -55,10 +65,28 @@ export default function Home() {
 			updateTotalIncome(response.data);
 		} catch (error) {
 			console.error("Error fetching income data:", error);
-			setError("Error fetching income data");
 		}
 	};
+	const createIncomeData = async (token) => {
+		const createdIncome = await axios.post(
+			"http://localhost:4001/income",
+			{
+				description: descriptionRef.current.value,
+				amount: parseInt(amountRef.current.value),
+				created_at: new Date(),
+			},
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
+		);
 
+		getIncomeData(token);
+		console.log(createdIncome.data);
+		descriptionRef.current.value = "";
+		amountRef.current.value = "";
+	};
 	const getExpenseData = async (token) => {
 		try {
 			const response = await axios.get("http://localhost:4001/expense", {
@@ -69,15 +97,14 @@ export default function Home() {
 			setExpenses(response.data);
 		} catch (error) {
 			console.error("Error fetching expense data:", error);
-			setError("Error fetching expense data");
 		}
 	};
 
-	const updateTotalIncome = (incomeData) => {
-		const total = incomeData.reduce((acc, cur) => acc + cur.amount, 0);
-		setTotalIncome(total);
-	};
-
+	const newTotalBalance = incomes.reduce((accVal, curVal) => {
+		return accVal + curVal.amount;
+	}, 0);
+	setTotalIncome(newTotalBalance);
+	console.log(newTotalBalance);
 	const subtractBalance = (expense) => {
 		setTotalIncome((prevTotalIncome) =>
 			Math.max(0, prevTotalIncome - expense.amount)
@@ -97,6 +124,9 @@ export default function Home() {
 					getIncomeData={getIncomeData}
 					totalIncome={totalIncome}
 					setTotalIncome={setTotalIncome}
+					createIncomeData={createIncomeData}
+					descriptionRef={descriptionRef}
+					amountRef={amountRef}
 				/>
 			</ModelBox>
 			<ModelBox

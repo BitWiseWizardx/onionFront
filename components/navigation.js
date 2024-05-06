@@ -36,7 +36,7 @@ export default function Navigation({ authUser }) {
 					<button
 						onClick={() => {
 							localStorage.removeItem("token");
-							router.push("/register");
+							router.push("/login");
 							setShowLoginModel(!showLoginModel);
 						}}
 						className="px-3 py-1.5 rounded-md bg-bgColor text-white"

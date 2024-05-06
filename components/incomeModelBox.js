@@ -6,42 +6,11 @@ import axios from "axios";
 export default function IncomeModelBox({
 	incomes,
 	getIncomeData,
-	setTotalIncome,
 	totalIncome,
+	createIncomeData,
+	descriptionRef,
+	amountRef,
 }) {
-	const descriptionRef = useRef();
-	const amountRef = useRef();
-
-	useEffect(() => {
-		const newTotalBalance = incomes.reduce((accVal, curVal) => {
-			return accVal + curVal.amount;
-		}, 0);
-		setTotalIncome(newTotalBalance);
-		console.log(newTotalBalance);
-	}, [incomes]);
-
-	const createIncomeData = async (e) => {
-		e.preventDefault();
-		const createdIncome = await axios.post(
-			"http://localhost:4001/income",
-			{
-				description: descriptionRef.current.value,
-				amount: parseInt(amountRef.current.value),
-				created_at: new Date(),
-			},
-			{
-				headers: {
-					Authorization: `Bearer ${localStorage.getItem("token")}`,
-				},
-			}
-		);
-
-		getIncomeData(localStorage.getItem("token"));
-		console.log(createdIncome.data);
-		descriptionRef.current.value = "";
-		amountRef.current.value = "";
-	};
-
 	const deleteIncomeData = async (id) => {
 		const deletedIncome = await axios.delete(
 			"http://localhost:4001/income/" + id
